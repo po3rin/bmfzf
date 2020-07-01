@@ -20,88 +20,76 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"time"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ktr0731/go-fuzzyfinder"
+	"github.com/po3rin/chrbmfzf/chrbm"
 	"github.com/spf13/viper"
 )
 
 var bookmarkFile string
 
-type bookmark struct {
-	name      string
-	url       string
-	dateAdded time.Time
-}
-
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "chrbmfzf",
 	Short: "chrbmfzf fuzzy-finder for Google Chrome Bookmark",
 	Long:  `chrbmfzf fuzzy-finder for Google Chrome Bookmark`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		b, err := ioutil.ReadFile(bookmarkFile)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		tracks, err := chrbm.NewBookmark(b)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		id, err := fuzzyfinder.Find(
+			tracks,
+			func(i int) string {
+				return tracks[i].Name
+			},
+			fuzzyfinder.WithPreviewWindow(func(i, w, h int) string {
+				if i == -1 {
+					return ""
+				}
+				return fmt.Sprintf("%s\n\nArtist: %s\nAlbum:  %s",
+					tracks[i].Name,
+					tracks[i].URL,
+					tracks[i].DateAdded,
+				)
+			}),
+		)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		fmt.Println("https://" + tracks[id].URL)
+	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	b, err := ioutil.ReadFile(bookmarkFile)
-	if err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	_ = b
-
-	var tracks = []bookmark{
-		{"pon", "po3rin.com", time.Now()},
-		{"twitter", "twitter.com", time.Now()},
-		{"golang", "godoc,org", time.Now()},
-	}
-
-	id, err := fuzzyfinder.Find(
-		tracks,
-		func(i int) string {
-			return tracks[i].name
-		},
-		fuzzyfinder.WithPreviewWindow(func(i, w, h int) string {
-			if i == -1 {
-				return ""
-			}
-			return fmt.Sprintf("%s\n\nArtist: %s\nAlbum:  %s",
-				tracks[i].name,
-				tracks[i].url,
-				tracks[i].dateAdded,
-			)
-		}),
-	)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Println(tracks[id].url)
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 
 	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	rootCmd.PersistentFlags().StringVar(&bookmarkFile, "file", path.Join(home, `Library/Application Support/Google/Chrome/Default/Bookmarks`), "config file (default is $HOME/Library/Application Support/Google/Chrome/Default/Bookmarks)")
+	rootCmd.PersistentFlags().StringVarP(&bookmarkFile, "file", "f", path.Join(home, `Library/Application Support/Google/Chrome/Default/Bookmarks`), "bookmark file path")
 }
 
-// initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	viper.AutomaticEnv() // read in environment variables that match
+	viper.AutomaticEnv()
 }
