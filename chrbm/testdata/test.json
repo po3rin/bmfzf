@@ -23,7 +23,7 @@
                      "meta_info": {
                         "last_visited_desktop": "13206418675320193"
                      },
-                     "name": "Fb",
+                     "name": "Facebook",
                      "type": "url",
                      "url": "https://www.facebook.com/"
                   },
@@ -34,20 +34,9 @@
                      "meta_info": {
                         "last_visited_desktop": "13206709664396902"
                      },
-                     "name": "Twi",
+                     "name": "Twitter",
                      "type": "url",
                      "url": "https://twitter.com/"
-                  },
-                  {
-                     "date_added": "13142651370583236",
-                     "guid": "77252569-4f0f-4819-83f5-96b9b689d722",
-                     "id": "1907",
-                     "meta_info": {
-                        "last_visited_desktop": "13206705726340452"
-                     },
-                     "name": "Lb",
-                     "type": "url",
-                     "url": "http://lifebear.com/top#calendar"
                   }
                ],
                "date_added": "13155027741425513",
@@ -62,7 +51,7 @@
          "date_modified": "13233914992119999",
          "guid": "060afcc2-2f29-4e15-96a0-7c7d156697fd",
          "id": "18",
-         "name": "Prism",
+         "name": "ブックマークバー",
          "type": "folder"
       }
    }

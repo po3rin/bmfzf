@@ -4,53 +4,96 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
-	"time"
-
-	"github.com/itchyny/gojq"
+	"path/filepath"
 )
 
 type Bookmark struct {
-	Name      string
-	URL       string
-	DateAdded time.Time
+	Name string
+	Path string
+	URL  string
 }
 
-type bookmarkItem struct {
-	name      string
-	itemType  string
-	dateAdded time.Time
+type Bookmarks struct {
+	Roots Roots `json:"roots"`
 }
 
-type bookmarkMap map[string]interface{}
+type Roots struct {
+	BookmarkBar Node `json:"bookmark_bar"`
+}
 
-func NewBookmark(j []byte) ([]Bookmark, error) {
-	if !json.Valid(j) {
+type Node struct {
+	Name     string `json:"name"`
+	Type     string `json:"type"`
+	URL      string `json:"url"`
+	Children []Node `json:"children"`
+}
+
+type Visitor interface {
+	Visit(n Node, path string) error
+}
+
+type bookmarkRecoder struct {
+	data []Bookmark
+}
+
+func NewBookmarkRecoder() *bookmarkRecoder {
+	return &bookmarkRecoder{
+		data: make([]Bookmark, 0, 100),
+	}
+}
+
+func (b *bookmarkRecoder) Visit(n Node, path string) error {
+	bm := Bookmark{
+		Name: n.Name,
+		Path: path,
+		URL:  n.URL,
+	}
+	b.data = append(b.data, bm)
+	return nil
+}
+
+func WalkEdge(n Node, visitor Visitor) error {
+	return walkEdge(n, "/", visitor)
+}
+
+func walkEdge(n Node, path string, v Visitor) error {
+	switch n.Type {
+	case "folder":
+		for _, c := range n.Children {
+			// Now support bookmark_bar only ...
+			p := filepath.Join(path, c.Name)
+			if c.Name == "ブックマークバー" {
+				p = "/"
+			}
+			err := walkEdge(c, p, v)
+			if err != nil {
+				return err
+			}
+		}
+	case "url":
+		v.Visit(n, path)
+	default:
+		return fmt.Errorf("unsupported type: %+v", n.Type)
+	}
+	return nil
+}
+
+func NewBookmark(byteJSON []byte) ([]Bookmark, error) {
+	if !json.Valid(byteJSON) {
 		return nil, errors.New("input is invalid format (required json only)")
 	}
 
-	var bm bookmarkMap
-	err := json.Unmarshal(j, &bm)
+	var m Bookmarks
+	err := json.Unmarshal(byteJSON, &m)
 	if err != nil {
 		return nil, err
 	}
 
-	query, err := gojq.Parse(".checksum")
+	r := NewBookmarkRecoder()
+	err = WalkEdge(m.Roots.BookmarkBar, r)
 	if err != nil {
 		return nil, err
 	}
 
-	iter := query.Run(bm)
-	for {
-		v, ok := iter.Next()
-		if !ok {
-			break
-		}
-		if err, ok := v.(error); ok {
-			log.Fatalln(err)
-		}
-		fmt.Printf("%#v\n", v)
-	}
-
-	return []Bookmark{}, nil
+	return r.data, nil
 }

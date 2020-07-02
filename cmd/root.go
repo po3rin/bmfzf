@@ -50,16 +50,16 @@ var rootCmd = &cobra.Command{
 		id, err := fuzzyfinder.Find(
 			tracks,
 			func(i int) string {
-				return tracks[i].Name
+				return tracks[i].Path
 			},
 			fuzzyfinder.WithPreviewWindow(func(i, w, h int) string {
 				if i == -1 {
 					return ""
 				}
-				return fmt.Sprintf("%s\n\nArtist: %s\nAlbum:  %s",
+				return fmt.Sprintf("%s\n\nPath: %s\nURL: %s",
 					tracks[i].Name,
+					tracks[i].Path,
 					tracks[i].URL,
-					tracks[i].DateAdded,
 				)
 			}),
 		)
@@ -68,7 +68,7 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Println("https://" + tracks[id].URL)
+		fmt.Println(tracks[id].URL)
 	},
 }
 

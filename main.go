@@ -15,7 +15,9 @@ limitations under the License.
 */
 package main
 
-import "github.com/po3rin/chrbmfzf/cmd"
+import (
+	"github.com/po3rin/chrbmfzf/cmd"
+)
 
 func main() {
 	cmd.Execute()
