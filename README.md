@@ -46,6 +46,13 @@ When combined with other tools, bmfzf is more useful! following command is fuzzy
 open -a '/Applications/Google Chrome.app' $(chrbmfzf)
 ```
 
+If you changed ```Bookmarks``` file location, please use -f option. 
+
+About Bookmarks  
+https://www.ubergizmo.com/how-to/find-google-chrome-bookmarks-computer/
+
+
+
 ## TODO
 
 - [ ] Provide tools with Homebrew
