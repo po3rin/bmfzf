@@ -41,12 +41,12 @@ func TestNewBookmark(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			byteJSON, err := ioutil.ReadFile(tt.file)
 			if err != nil {
-				t.Errorf("unexpected error: %+v", err)
+				t.Fatalf("unexpected error: %+v", err)
 			}
 
-			got, err := chrbm.NewBookmark(byteJSON)
+			got, err := chrbm.ListBookmarks(byteJSON)
 			if err != nil {
-				t.Errorf("unexpected error: %+v", err)
+				t.Fatalf("unexpected error: %+v", err)
 			}
 
 			if !reflect.DeepEqual(got, tt.want) {

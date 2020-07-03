@@ -79,6 +79,9 @@ func walkEdge(n Node, path string, v Visitor) error {
 		}
 	case "url":
 		v.Visit(n, path)
+	case "":
+		// empty type
+		return nil
 	default:
 		return fmt.Errorf("unsupported type: %+v", n.Type)
 	}
