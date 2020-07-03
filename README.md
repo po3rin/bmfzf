@@ -8,7 +8,7 @@ bmfzf lets you fuzzy search of Chrome Bookmarks.
 
 ## Install
 
-### curl
+#### ■ curl
 
 you can install with curl.
 
@@ -19,11 +19,11 @@ $ curl -sf https://gobinaries.com/po3rin/bmfzf | sh
 Go Binaries is an on-demand binary server, allowing non-Go users to quickly install tools
 https://github.com/tj/gobinaries
 
-### Release Page
+#### ■ Release Page
 
 https://github.com/po3rin/bmfzf/releases
 
-### Go
+#### ■ Go
 
 ```bash
 $ go get -u github.com/po3rin/bmfzf
