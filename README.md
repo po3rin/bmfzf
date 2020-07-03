@@ -43,7 +43,7 @@ When combined with other tools, bmfzf is more useful! following command is fuzzy
 
 ```bash
 # MacOS example
-open -a '/Applications/Google Chrome.app' $(chrbmfzf)
+$ open -a '/Applications/Google Chrome.app' $(chrbmfzf)
 ```
 
 If you changed ```Bookmarks``` file location, please use -f option. 
