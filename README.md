@@ -4,7 +4,7 @@
 
 bmfzf lets you fuzzy search of Chrome Bookmarks.
 
-<img src="./out.gif">
+<img src="./out.gif" width="640px">
 
 ## Install
 
