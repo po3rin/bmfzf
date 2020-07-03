@@ -16,7 +16,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/po3rin/chrbmfzf/cmd"
+	"github.com/po3rin/bmfzf/cmd"
 )
 
 func main() {

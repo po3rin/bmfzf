@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/po3rin/chrbmfzf/chrbm"
+	"github.com/po3rin/bmfzf/chrbm"
 )
 
 func TestNewBookmark(t *testing.T) {

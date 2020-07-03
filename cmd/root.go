@@ -20,20 +20,21 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"runtime"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ktr0731/go-fuzzyfinder"
-	"github.com/po3rin/chrbmfzf/chrbm"
+	"github.com/po3rin/bmfzf/chrbm"
 	"github.com/spf13/viper"
 )
 
 var bookmarkFile string
 
 var rootCmd = &cobra.Command{
-	Use:   "chrbmfzf",
-	Short: "chrbmfzf fuzzy-finder for Google Chrome Bookmark",
-	Long:  `chrbmfzf fuzzy-finder for Google Chrome Bookmark`,
+	Use:   "bmfzf",
+	Short: "bmfzf fuzzy-finder for Google Chrome Bookmark",
+	Long:  `bmfzf fuzzy-finder for Google Chrome Bookmark`,
 	Run: func(cmd *cobra.Command, args []string) {
 		b, err := ioutil.ReadFile(bookmarkFile)
 		if err != nil {
@@ -41,7 +42,7 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		tracks, err := chrbm.NewBookmark(b)
+		tracks, err := chrbm.ListBookmarks(b)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -79,6 +80,20 @@ func Execute() {
 	}
 }
 
+func bookmarkFileLocation() (string, error) {
+	os := runtime.GOOS
+	switch os {
+	case "windows":
+		return `AppData\Local\Google\Chrome\User Data\Default\bookmarks`, nil
+	case "darwin":
+		return `Library/Application Support/Google/Chrome/Default/Bookmarks`, nil
+	case "linux":
+		return `.config/google-chrome/Default`, nil
+	default:
+		return "", fmt.Errorf("sorry... your OS %v is not supported. please specify you bookmark file using -f flag.", os)
+	}
+}
+
 func init() {
 	cobra.OnInitialize(initConfig)
 
@@ -87,7 +102,12 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	rootCmd.PersistentFlags().StringVarP(&bookmarkFile, "file", "f", path.Join(home, `Library/Application Support/Google/Chrome/Default/Bookmarks`), "bookmark file path")
+	location, err := bookmarkFileLocation()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	rootCmd.PersistentFlags().StringVarP(&bookmarkFile, "file", "f", path.Join(home, location), "bookmark file path")
 }
 
 func initConfig() {
