@@ -90,7 +90,7 @@ func bookmarkFileLocation() (string, error) {
 	case "linux":
 		return `.config/google-chrome/Default`, nil
 	default:
-		return "", fmt.Errorf("sorry... your OS %v is not supported. please specify you bookmark file using -f flag.", os)
+		return "", fmt.Errorf("sorry... your OS %v is not supported. please specify your bookmark file using -f flag.", os)
 	}
 }
 
