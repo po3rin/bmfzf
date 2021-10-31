@@ -1,6 +1,6 @@
 # bmfzf
 
-<img src="https://img.shields.io/badge/go-v1.15-blue.svg"/> [![GoDoc](https://godoc.org/github.com/po3rin/bmfzf?status.svg)](https://godoc.org/github.com/po3rin/bmfzf) ![Go Test](https://github.com/po3rin/bmfzf/workflows/Go%20Status/badge.svg) ![release](https://github.com/po3rin/bmfzf/workflows/release/badge.svg)
+<img src="https://img.shields.io/badge/go-v1.16-blue.svg"/> [![GoDoc](https://godoc.org/github.com/po3rin/bmfzf?status.svg)](https://godoc.org/github.com/po3rin/bmfzf) ![Go Test](https://github.com/po3rin/bmfzf/workflows/Go%20Status/badge.svg) ![release](https://github.com/po3rin/bmfzf/workflows/release/badge.svg)
 
 bmfzf (bookmark fzf) lets you fuzzy search of Chrome Bookmarks.
 
@@ -26,7 +26,7 @@ https://github.com/po3rin/bmfzf/releases
 #### ■ Go
 
 ```bash
-$ go get -u github.com/po3rin/bmfzf
+$ go install github.com/po3rin/bmfzf
 ```
 
 ## Usage
